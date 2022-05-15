@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500;600;700;800;900&family=Righteous&display=swap');
+
+*{
+    box-sizing: border-box;
+}
+
+h1{
+    font-family: 'Righteous';
+    font-weight: 400;
+    color: white
+}
+
+.root{
+    height: 100%;
+    background-color: #FB6B6B;
+    font-family: "Recursive";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
