@@ -2,7 +2,15 @@ h1{
     font-size: 36px;
 }
 
-button{
+.welcome-menu{
+    height: 318px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.welcome-menu button{
     font-family: "Recursive";
     width: 246px;
     height: 54px;
@@ -13,12 +21,4 @@ button{
     font-weight: 400;
     font-size: 18px;
     color: #D70900;
-}
-
-.welcome-menu{
-    height: 318px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
 }
