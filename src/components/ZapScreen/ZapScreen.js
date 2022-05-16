@@ -1,10 +1,12 @@
 import "./style.css";
-import logo from "../../assets/logo.png"
+import logoZap from "../../assets/logoZap.png"
 import vetor from "../../assets/Vector.png"
+import party from "../../assets/party 2.png"
+import sad from "../../assets/sad 7.png"
 import React, { useState } from 'react';
 
 
-function Content({setOpen, setCardtype, setIcon, setAnswerList, question, answer, answerList}){
+function Content({setOpen, setCardtype, setIcon, setAnswerList, setAllRemenber, question, answer, answerList}){
     const[flipstatus, setFlipstatus]=React.useState("content")
 
     function flip(){
@@ -20,7 +22,8 @@ function Content({setOpen, setCardtype, setIcon, setAnswerList, question, answer
         setOpen(false)
         setCardtype("question-forget")
         setIcon(<ion-icon name="close-circle"></ion-icon>)
-        const newAnswers = [...answerList, <ion-icon color="danger" name="close-circle"></ion-icon>];
+        setAllRemenber(false)
+        const newAnswers = [...answerList, <div className="question-forget"><ion-icon name="close-circle"></ion-icon></div>];
 		setAnswerList(newAnswers);
     }
 
@@ -28,7 +31,7 @@ function Content({setOpen, setCardtype, setIcon, setAnswerList, question, answer
         setOpen(false)
         setCardtype("question-almost-forgot")
         setIcon(<ion-icon name="help-circle"></ion-icon>)
-        const newAnswers = [...answerList, <ion-icon color="warning" name="help-circle"></ion-icon>];
+        const newAnswers = [...answerList, <div className="question-almost-forgot"><ion-icon name="help-circle"></ion-icon></div>];
 		setAnswerList(newAnswers);
     }
 
@@ -36,7 +39,7 @@ function Content({setOpen, setCardtype, setIcon, setAnswerList, question, answer
         setOpen(false)
         setCardtype("question-recall")
         setIcon(<ion-icon name="checkmark-circle"></ion-icon>)
-        const newAnswers = [...answerList, <ion-icon color="success" name="checkmark-circle"></ion-icon>];
+        const newAnswers = [...answerList, <div className="question-recall"><ion-icon name="checkmark-circle"></ion-icon></div>];
 		setAnswerList(newAnswers);
     }
 
@@ -58,7 +61,7 @@ function Content({setOpen, setCardtype, setIcon, setAnswerList, question, answer
     )
 }
 
-function Card({number, question, answer, setAnswerList, answerList}){
+function Card({number, question, answer, setAnswerList, answerList, setAllRemenber}){
     const[open, setOpen]=React.useState(false)
     const[cardtype, setCardtype]=React.useState("")
     const[icon, setIcon]=useState(<ion-icon name="play-outline" onClick={()=>setOpen(true)}></ion-icon>)
@@ -72,22 +75,40 @@ function Card({number, question, answer, setAnswerList, answerList}){
         )
     }
     else{
-        return(<Content setOpen={setOpen} setCardtype={setCardtype} setIcon={setIcon} setAnswerList={setAnswerList} question={question} answer={answer} answerList={answerList}/>)
+        return(<Content setOpen={setOpen} setCardtype={setCardtype} setIcon={setIcon} setAnswerList={setAnswerList} question={question} answer={answer} answerList={answerList} setAllRemenber={setAllRemenber}/>)
     }
 }
 
-function Deck({infocards, setAnswerList, answerList}){
+function Deck({infocards, setAnswerList, answerList, setAllRemenber}){
     
     return (
         <div className="deck">
-            {infocards.map(card =><Card number={card.number} question={card.question} answer={card.answer} answerList={answerList} setAnswerList={setAnswerList}/>)}
+            {infocards.map(card =><Card number={card.number} question={card.question} answer={card.answer} answerList={answerList} setAnswerList={setAnswerList} setAllRemenber={setAllRemenber}/>)}
         </div>
     )
 }
 
-function BottomBar({answerList, lenDeck}){
+
+function Endmessege({allRemenber}){
+    const happyTitle=<div><img src={party} /> Parabéns!</div>
+    const happyMessege=<div className="messege">Você não esqueceu de nenhum flashcard! </div>
+    const sadTitle=<div><img src={sad} /> Putz...</div>
+    const sadMessege=<div className="messege">Ainda faltam alguns...<br /> Mas não desanime!</div>
+
+
+    return(
+        <div className="end-messege">
+            {allRemenber ? happyTitle:sadTitle}
+            {allRemenber ? happyMessege:sadMessege}
+        </div>
+        
+    )
+}
+
+function BottomBar({answerList, lenDeck, allRemenber}){
     return (
         <div className="bottom-bar">
+            {lenDeck===answerList.length?<Endmessege allRemenber={allRemenber}/>:<></>}
             {answerList.length}/{lenDeck} CONCLUÍDOS
             <div className="answers-list">
                 {answerList}
@@ -98,6 +119,7 @@ function BottomBar({answerList, lenDeck}){
 
 export default function ZapScreen(){
     const[answerList, setAnswerList]=useState([])
+    const[allRemenber, setAllRemenber]=useState(true)
     const infocards= shuffle([
         {question: "O que é JSX?", answer: "Uma extensão de linguagem do JavaScript"},
         {question: "O React é __", answer: "uma biblioteca JavaScript para construção de interfaces"},
@@ -131,11 +153,11 @@ export default function ZapScreen(){
     return (
         <div className="background zapscreen">
             <div className="title">
-                <img src={logo} />
+                <img src={logoZap} />
                 <h1>ZapRecall</h1>
             </div>
-            <Deck infocards={infocards} answerList={answerList} setAnswerList={setAnswerList}/>
-            <BottomBar answerList={answerList} lenDeck={infocards.length}/>
+            <Deck infocards={infocards} answerList={answerList} setAnswerList={setAnswerList} setAllRemenber={setAllRemenber}/>
+            <BottomBar answerList={answerList} lenDeck={infocards.length} allRemenber={allRemenber}/>
         </div>
     )
 }
